@@ -3,9 +3,9 @@ package com.example.lern.data.local.dao
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy.Companion.IGNORE
 import androidx.room.Query
 import androidx.room.Update
-import androidx.room.Upsert
 import com.example.lern.data.local.entities.PostsEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -21,7 +21,7 @@ interface PostsDao {
     @Delete
     suspend fun deletePost(post: PostsEntity)
 
-    @Upsert
+    @Insert(onConflict = IGNORE)
     suspend fun updateDb(posts: List<PostsEntity>)
 
     @Update

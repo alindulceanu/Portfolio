@@ -1,6 +1,5 @@
 package com.example.lern.viewmodels
 
-import android.util.Log
 import android.util.Log.d
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -20,14 +19,16 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
     private val repo: MainRepository
 ) : ViewModel() {
+
     private val _uiState = MutableStateFlow(MainState())
     val uiState: StateFlow<MainState> = _uiState
 
     init {
-        getAvailablePosts()
+        initPosts()
     }
 
-    fun getAvailablePosts() {
+    private fun initPosts() {
+        d("MainViewModel", "Initialized posts")
         viewModelScope.launch {
             repo.getPosts().collect {
                 _uiState.emit(
@@ -40,6 +41,8 @@ class MainViewModel @Inject constructor(
     fun deletePost(post: PostsEntity) {
         viewModelScope.launch {
             repo.setDeletedPost(post)
+            if (post.isFavorited)
+                repo.setFavoritePost(post)
         }
     }
 
@@ -59,19 +62,9 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun getFavoritedPosts() {
-        viewModelScope.launch {
-            repo.getFavoritedPosts().collect {
-                _uiState.emit(
-                    _uiState.value.copy(posts = it)
-                )
-            }
-        }
-    }
-
     fun changeTab(tabNumber: TabId) {
         viewModelScope.launch {
-            d("VIEWMODEL","Changing to $tabNumber")
+            d("MainViewModel","Changing to $tabNumber")
             when(tabNumber) {
                 TAB_ONE -> repo.getPosts()
                 TAB_TWO -> repo.getFavoritedPosts()
