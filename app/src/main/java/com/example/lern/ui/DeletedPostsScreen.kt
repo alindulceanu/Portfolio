@@ -23,17 +23,27 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.text.style.TextAlign.Companion.Justify
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.lern.Screen.MainScreen
 import com.example.lern.viewmodels.DeletedPostsViewModel
+import com.example.lern.viewmodels.events.Events
+import com.example.lern.viewmodels.events.Events.DeletedPostsScreenEvents
+import com.example.lern.viewmodels.events.Events.DeletedPostsScreenEvents.CheckPost
+import com.example.lern.viewmodels.events.Events.DeletedPostsScreenEvents.RestorePosts
+import com.example.lern.viewmodels.states.States
+import com.example.lern.viewmodels.states.States.DeletedPostsState
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 
 @Composable
-fun DeletedPostsScreen (nav : NavController, viewModel: DeletedPostsViewModel = hiltViewModel(), modifier: Modifier = Modifier) {
-    val uiState by viewModel.uiState.collectAsState()
+fun DeletedPostsScreen (nav : NavController, uiState: StateFlow<DeletedPostsState>, onEvent: (DeletedPostsScreenEvents) -> Unit, modifier: Modifier = Modifier) {
+    val uiState by uiState.collectAsState()
 
     Scaffold {
         Box(modifier = modifier.fillMaxSize().padding(it)) {
@@ -68,7 +78,7 @@ fun DeletedPostsScreen (nav : NavController, viewModel: DeletedPostsViewModel = 
                         }
                         Checkbox(
                             checked = deletedItem.isChecked,
-                            onCheckedChange = { viewModel.checkPost(deletedItem) },
+                            onCheckedChange = { onEvent(CheckPost(deletedItem)) },
                             modifier = modifier.padding(start = 16.dp)
                         )
                     }
@@ -78,7 +88,7 @@ fun DeletedPostsScreen (nav : NavController, viewModel: DeletedPostsViewModel = 
                 modifier = modifier.align(BottomEnd),
             ) {
                 Button(
-                    onClick = { viewModel.restorePosts() },
+                    onClick = { onEvent(RestorePosts) },
                 ) {
                     Text(text = "Restore")
                 }
@@ -90,4 +100,10 @@ fun DeletedPostsScreen (nav : NavController, viewModel: DeletedPostsViewModel = 
             }
         }
     }
+}
+
+@Preview
+@Composable
+fun PreviewDeletedPostsScreen() {
+    DeletedPostsScreen(rememberNavController(), uiState = MutableStateFlow(DeletedPostsState()), {} )
 }

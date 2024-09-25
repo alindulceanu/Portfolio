@@ -1,31 +1,31 @@
 package com.example.lern.viewmodels
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.lern.data.MainRepository
 import com.example.lern.tools.toDeletedPostsEntity
 import com.example.lern.tools.toPostsEntity
-import com.example.lern.viewmodels.states.DeletedPosts
-import com.example.lern.viewmodels.states.DeletedPostsState
+import com.example.lern.viewmodels.events.Events.DeletedPostsScreenEvents
+import com.example.lern.viewmodels.events.Events.DeletedPostsScreenEvents.CheckPost
+import com.example.lern.viewmodels.events.Events.DeletedPostsScreenEvents.RestorePosts
+import com.example.lern.viewmodels.states.States.DeletedPostsState
+import com.example.lern.viewmodels.templates.ViewModelTemplate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class DeletedPostsViewModel @Inject constructor(
     private val repo: MainRepository
-) : ViewModel() {
+) : ViewModelTemplate<DeletedPostsState, DeletedPostsScreenEvents>() {
 
-    private val _uiState = MutableStateFlow(DeletedPostsState())
-    val uiState: StateFlow<DeletedPostsState> = _uiState
+    override val _uiState = MutableStateFlow(DeletedPostsState())
 
     init {
-        initPosts()
+        initState()
     }
 
-    private fun initPosts() {
+    override fun initState() {
         viewModelScope.launch {
             repo.getDeletedPosts()
                 .collect {
@@ -40,28 +40,31 @@ class DeletedPostsViewModel @Inject constructor(
         }
     }
 
-    fun checkPost(post: DeletedPosts) {
-        viewModelScope.launch {
-            _uiState.emit(
-                _uiState.value.copy(
-                    posts = _uiState.value.posts.map {
-                        if (it.id == post.id) {
-                            it.copy(isChecked = !it.isChecked)
-                        }
-                        else
-                            it
-                    }
-                )
-            )
-        }
-    }
+    override fun onEvent(event: DeletedPostsScreenEvents) {
+        when (event) {
+            is CheckPost -> {
+                viewModelScope.launch {
+                    _uiState.emit(
+                        _uiState.value.copy(
+                            posts = _uiState.value.posts.map {
+                                if (it.id == event.post.id) {
+                                    it.copy(isChecked = !it.isChecked)
+                                } else
+                                    it
+                            }
+                        )
+                    )
+                }
+            }
 
-    fun restorePosts() {
-        viewModelScope.launch {
-            _uiState.value.posts
-                .filter { it.isChecked }
-                .forEach {
-                    repo.setDeletedPost(it.toPostsEntity())
+            RestorePosts -> {
+                viewModelScope.launch {
+                    _uiState.value.posts
+                        .filter { it.isChecked }
+                        .forEach {
+                            repo.setDeletedPost(it.toPostsEntity())
+                        }
+                }
             }
         }
     }

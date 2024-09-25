@@ -2,8 +2,11 @@ package com.example.lern.ui
 
 import android.util.Log.d
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateColor
 import androidx.compose.animation.core.animateIntOffsetAsState
 import androidx.compose.animation.core.animateOffsetAsState
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.repeatable
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -45,23 +48,36 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.text.style.TextAlign.Companion.Justify
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.Lifecycle.State
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.lern.Screen
 import com.example.lern.Screen.DeletedPostsScreen
 import com.example.lern.Screen.PostScreen
 import com.example.lern.viewmodels.MainViewModel
+import com.example.lern.viewmodels.events.Events
+import com.example.lern.viewmodels.events.Events.MainScreenEvents
+import com.example.lern.viewmodels.events.Events.MainScreenEvents.ChangeTab
+import com.example.lern.viewmodels.events.Events.MainScreenEvents.DeletePost
+import com.example.lern.viewmodels.events.Events.MainScreenEvents.FavoritePost
+import com.example.lern.viewmodels.states.States
+import com.example.lern.viewmodels.states.States.MainState
 import com.example.lern.viewmodels.states.TabId
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlin.math.absoluteValue
 import kotlin.math.roundToInt
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun MainScreen(nav: NavController, modifier: Modifier = Modifier, viewModel: MainViewModel = hiltViewModel()) {
-    val uiState by viewModel.uiState.collectAsState()
+fun MainScreen(nav: NavController, uiState: StateFlow<MainState>, onEvent: (MainScreenEvents) -> Unit, modifier: Modifier = Modifier) {
+    val uiState by uiState.collectAsState()
     val tabTitles = listOf("All", "Favorite")
 
     Scaffold {
@@ -84,7 +100,7 @@ fun MainScreen(nav: NavController, modifier: Modifier = Modifier, viewModel: Mai
                             modifier = modifier.combinedClickable(
                                 onClick = {},
                                 onLongClick = {},
-                                onDoubleClick = { viewModel.favoritePost(it) }
+                                onDoubleClick = { onEvent(FavoritePost(it)) }
                             )
                                 .offset {
                                     IntOffset(dragX.absoluteValue.roundToInt(), 0)
@@ -95,7 +111,7 @@ fun MainScreen(nav: NavController, modifier: Modifier = Modifier, viewModel: Mai
                                             d("MainScreen", "Drag: $dragX")
                                             if (dragX >= 600f) {
                                                 visible = false
-                                                viewModel.deletePost(it)
+                                                onEvent(DeletePost(it))
                                             } else
                                                 dragX = 0f
 
@@ -164,11 +180,17 @@ fun MainScreen(nav: NavController, modifier: Modifier = Modifier, viewModel: Mai
                         selected = uiState.selectedTab == tabType,
                         onClick = {
                             d("MainScreen", "Clicked tab: $this")
-                            viewModel.changeTab(tabType) }) {
+                            onEvent(ChangeTab(tabType)) }) {
                         Text(text = title)
                     }
                 }
             }
         }
     }
+}
+
+@Preview
+@Composable
+fun PreviewMainScreen() {
+    MainScreen(rememberNavController(), uiState = MutableStateFlow(MainState()), {} )
 }

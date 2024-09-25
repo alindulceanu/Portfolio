@@ -18,11 +18,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.lern.Screen
 import com.example.lern.viewmodels.PostViewModel
+import com.example.lern.viewmodels.events.Events
+import com.example.lern.viewmodels.events.Events.PostScreenEvents
+import com.example.lern.viewmodels.events.Events.PostScreenEvents.PostEntity
+import com.example.lern.viewmodels.states.States
+import com.example.lern.viewmodels.states.States.EmptyState
+import kotlinx.coroutines.flow.MutableStateFlow
 
 @Composable
-fun PostScreen(nav: NavController?, viewModel: PostViewModel = hiltViewModel()) {
+fun PostScreen(nav: NavController, onEvent: (PostScreenEvents) -> Unit) {
     Box(
         contentAlignment = Alignment.Center
     ) {
@@ -50,7 +57,7 @@ fun PostScreen(nav: NavController?, viewModel: PostViewModel = hiltViewModel()) 
             )
             Row {
                 Button(
-                    onClick = { viewModel.postEntity(title, body) }
+                    onClick = { onEvent(PostEntity(title, body)) }
                 ) {
                     Text("Upload")
                 }
@@ -67,5 +74,5 @@ fun PostScreen(nav: NavController?, viewModel: PostViewModel = hiltViewModel()) 
 @Preview
 @Composable
 fun PreviewPostScreen() {
-    PostScreen(null)
+    PostScreen(rememberNavController()) {}
 }
