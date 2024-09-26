@@ -1,4 +1,4 @@
-package com.example.lern.data.remote
+package com.example.lern.tools
 
 object HttpRoutes {
     private const val BASE_URL = "https://jsonplaceholder.typicode.com"

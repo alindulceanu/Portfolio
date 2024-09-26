@@ -8,8 +8,8 @@ import com.example.lern.viewmodels.events.Events.MainScreenEvents.ChangeTab
 import com.example.lern.viewmodels.events.Events.MainScreenEvents.DeletePost
 import com.example.lern.viewmodels.events.Events.MainScreenEvents.FavoritePost
 import com.example.lern.viewmodels.states.States.MainState
-import com.example.lern.viewmodels.states.TabId.TAB_ONE
-import com.example.lern.viewmodels.states.TabId.TAB_TWO
+import com.example.lern.viewmodels.states.MainScreenTabId.TAB_ONE
+import com.example.lern.viewmodels.states.MainScreenTabId.TAB_TWO
 import com.example.lern.viewmodels.templates.ViewModelTemplate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

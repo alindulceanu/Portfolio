@@ -1,4 +1,4 @@
-package com.example.lern.ui
+package com.example.lern.ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -16,17 +16,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.lern.Screen
-import com.example.lern.viewmodels.PostViewModel
-import com.example.lern.viewmodels.events.Events
+import com.example.lern.Screens.MAIN_SCREEN
 import com.example.lern.viewmodels.events.Events.PostScreenEvents
 import com.example.lern.viewmodels.events.Events.PostScreenEvents.PostEntity
-import com.example.lern.viewmodels.states.States
-import com.example.lern.viewmodels.states.States.EmptyState
-import kotlinx.coroutines.flow.MutableStateFlow
 
 @Composable
 fun PostScreen(nav: NavController, onEvent: (PostScreenEvents) -> Unit) {
@@ -62,7 +56,7 @@ fun PostScreen(nav: NavController, onEvent: (PostScreenEvents) -> Unit) {
                     Text("Upload")
                 }
                 Button(
-                    onClick = { nav?.navigate(Screen.MainScreen.route) }
+                    onClick = { nav?.navigate(MAIN_SCREEN.route) }
                 ) {
                     Text("Back")
                 }

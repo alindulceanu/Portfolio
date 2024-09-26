@@ -1,12 +1,12 @@
 package com.example.lern.viewmodels.states
 
 import com.example.lern.data.local.entities.PostsEntity
-import com.example.lern.viewmodels.states.TabId.TAB_ONE
+import com.example.lern.viewmodels.states.MainScreenTabId.TAB_ONE
 
 sealed class States {
     data class MainState(
         val posts: List<PostsEntity> = emptyList(),
-        var selectedTab: TabId = TAB_ONE
+        var selectedTab: MainScreenTabId = TAB_ONE
     ) : States()
 
     data class DeletedPostsState(

@@ -1,15 +1,14 @@
-package com.example.lern.DI
+package com.example.lern.di
 
 import android.app.Application
 import androidx.room.Room
 import com.example.lern.data.MainRepository
 import com.example.lern.data.local.dao.PostsDao
 import com.example.lern.data.local.db.PostsDatabase
-import com.example.lern.data.remote.PostsServiceImplementation
+import com.example.lern.data.remote.service.PostsServiceImplementation
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.android.Android

@@ -1,4 +1,4 @@
-package com.example.lern.data.remote
+package com.example.lern.data.remote.service
 
 import com.example.lern.data.remote.dto.PostRequest
 import com.example.lern.data.remote.dto.PostResponse

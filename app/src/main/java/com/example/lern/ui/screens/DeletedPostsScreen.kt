@@ -1,4 +1,4 @@
-package com.example.lern.ui
+package com.example.lern.ui.screens
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,24 +26,19 @@ import androidx.compose.ui.text.style.TextAlign.Companion.Justify
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.lern.Screen.MainScreen
-import com.example.lern.viewmodels.DeletedPostsViewModel
-import com.example.lern.viewmodels.events.Events
+import com.example.lern.Screens.MAIN_SCREEN
 import com.example.lern.viewmodels.events.Events.DeletedPostsScreenEvents
 import com.example.lern.viewmodels.events.Events.DeletedPostsScreenEvents.CheckPost
 import com.example.lern.viewmodels.events.Events.DeletedPostsScreenEvents.RestorePosts
-import com.example.lern.viewmodels.states.States
 import com.example.lern.viewmodels.states.States.DeletedPostsState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
 
 @Composable
-fun DeletedPostsScreen (nav : NavController, uiState: StateFlow<DeletedPostsState>, onEvent: (DeletedPostsScreenEvents) -> Unit, modifier: Modifier = Modifier) {
-    val uiState by uiState.collectAsState()
+fun DeletedPostsScreen (nav : NavController, uiState: DeletedPostsState, onEvent: (DeletedPostsScreenEvents) -> Unit, modifier: Modifier = Modifier) {
 
     Scaffold {
         Box(modifier = modifier.fillMaxSize().padding(it)) {
@@ -93,7 +88,7 @@ fun DeletedPostsScreen (nav : NavController, uiState: StateFlow<DeletedPostsStat
                     Text(text = "Restore")
                 }
                 Button(
-                    onClick = { nav.navigate(MainScreen.route) },
+                    onClick = { nav.navigate(MAIN_SCREEN.route) },
                 ) {
                     Text(text = "Back")
                 }
@@ -105,5 +100,5 @@ fun DeletedPostsScreen (nav : NavController, uiState: StateFlow<DeletedPostsStat
 @Preview
 @Composable
 fun PreviewDeletedPostsScreen() {
-    DeletedPostsScreen(rememberNavController(), uiState = MutableStateFlow(DeletedPostsState()), {} )
+    DeletedPostsScreen(rememberNavController(), uiState = DeletedPostsState(), {} )
 }

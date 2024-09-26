@@ -2,7 +2,7 @@ package com.example.lern.data
 
 import com.example.lern.data.local.dao.PostsDao
 import com.example.lern.data.local.entities.PostsEntity
-import com.example.lern.data.remote.PostsServiceImplementation
+import com.example.lern.data.remote.service.PostsServiceImplementation
 import com.example.lern.data.remote.dto.PostRequest
 import com.example.lern.data.remote.dto.PostResponse
 import com.example.lern.tools.toEntity

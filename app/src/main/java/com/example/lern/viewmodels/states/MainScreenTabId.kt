@@ -1,6 +1,6 @@
 package com.example.lern.viewmodels.states
 
-enum class TabId {
+enum class MainScreenTabId {
     TAB_ONE,
     TAB_TWO
 }
