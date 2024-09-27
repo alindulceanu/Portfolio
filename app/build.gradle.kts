@@ -8,11 +8,11 @@ plugins {
 
 android {
 
-    namespace = "com.example.lern"
+    namespace = "com.example.portfolio"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.lern"
+        applicationId = "com.example.portfolio"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
