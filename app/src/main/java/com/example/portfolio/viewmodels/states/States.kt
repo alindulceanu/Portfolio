@@ -6,11 +6,11 @@ import com.example.portfolio.viewmodels.states.MainScreenTabId.TAB_ONE
 sealed class States {
     data class MainState(
         val posts: List<PostsEntity> = emptyList(),
-        var selectedTab: MainScreenTabId = TAB_ONE
+        val selectedTab: MainScreenTabId = TAB_ONE
     ) : States()
 
     data class DeletedPostsState(
-        var posts: List<DeletedPosts> = emptyList()
+        val posts: List<DeletedPosts> = emptyList()
     ) : States()
 
     data object EmptyState : States()

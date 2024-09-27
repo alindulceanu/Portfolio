@@ -18,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
@@ -29,7 +30,7 @@ import com.example.portfolio.Screens.POST_SCREEN
 import com.example.portfolio.ui.screens.DeletedPostsScreen
 import com.example.portfolio.ui.screens.MainScreen
 import com.example.portfolio.ui.screens.PostScreen
-import com.example.portfolio.ui.theme.LernTheme
+import com.example.portfolio.ui.theme.PortfolioTheme
 import com.example.portfolio.viewmodels.DeletedPostsViewModel
 import com.example.portfolio.viewmodels.MainViewModel
 import com.example.portfolio.viewmodels.PostViewModel
@@ -39,13 +40,13 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContent {
-            LernTheme {
+            PortfolioTheme {
                 Surface(
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(colorScheme.background)
+                        .background(colorScheme.background),
+                    tonalElevation = 3.dp
                 )
                 {
                     Navigation()
@@ -60,7 +61,7 @@ fun Navigation() {
     val navController = rememberNavController()
     Scaffold(
         bottomBar = {
-            NavigationBar(navController)
+            MyNavigationBar(navController)
         }
     ) { padding ->
         NavHost(
@@ -87,14 +88,19 @@ fun Navigation() {
 }
 
 @Composable
-fun NavigationBar(nav: NavController) {
-    NavigationBar(modifier = Modifier.fillMaxWidth()) {
-        Screens.entries.forEach { screen ->
+fun MyNavigationBar(nav: NavController) {
+    NavigationBar(
+        modifier = Modifier.fillMaxWidth(),
+        containerColor = colorScheme.secondaryContainer,
+        contentColor = colorScheme.onSecondaryContainer,
+    ) {
+        Screens.entries
+            .filter { it.forNavbar }
+            .forEach { screen ->
             NavigationBarItem(
                 selected = nav.currentBackStackEntry?.destination?.route == screen.route,
                 onClick = { nav.navigate(screen.route) },
                 icon = { Icon(screen.icon, contentDescription = null) },
-                label = {""}
             )
         }
     }

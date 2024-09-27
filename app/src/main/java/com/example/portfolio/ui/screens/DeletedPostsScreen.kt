@@ -29,6 +29,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.portfolio.Screens.MAIN_SCREEN
 import com.example.portfolio.viewmodels.events.Events.DeletedPostsScreenEvents
 import com.example.portfolio.viewmodels.events.Events.DeletedPostsScreenEvents.CheckPost
+import com.example.portfolio.viewmodels.events.Events.DeletedPostsScreenEvents.RestoreAllPosts
 import com.example.portfolio.viewmodels.events.Events.DeletedPostsScreenEvents.RestorePosts
 import com.example.portfolio.viewmodels.states.States.DeletedPostsState
 
@@ -84,9 +85,9 @@ fun DeletedPostsScreen (nav : NavController, uiState: DeletedPostsState, onEvent
                     Text(text = "Restore")
                 }
                 Button(
-                    onClick = { nav.navigate(MAIN_SCREEN.route) },
+                    onClick = { onEvent(RestoreAllPosts) },
                 ) {
-                    Text(text = "Back")
+                    Text(text = "Restore All")
                 }
             }
         }

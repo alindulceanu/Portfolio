@@ -9,6 +9,6 @@ data class PostsEntity(
     val id: Int,
     val title: String,
     val body: String,
-    var isDeleted: Boolean = false,
-    var isFavorited: Boolean = false,
+    val isDeleted: Boolean = false,
+    val isFavorited: Boolean = false,
 )

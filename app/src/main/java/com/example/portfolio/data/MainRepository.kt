@@ -34,11 +34,11 @@ class MainRepository @Inject constructor(
     }
 
     suspend fun setFavoritePost(post: PostsEntity) {
-        postsDao.updatePost(post.apply { isFavorited = !isFavorited })
+        postsDao.updatePost(post.copy(isFavorited = !post.isFavorited))
     }
 
     suspend fun setDeletedPost(post: PostsEntity) {
-        postsDao.updatePost(post.apply { isDeleted = !isDeleted })
+        postsDao.updatePost(post.copy(isDeleted = !post.isDeleted))
     }
 
     fun getPosts(): Flow<List<PostsEntity>> {

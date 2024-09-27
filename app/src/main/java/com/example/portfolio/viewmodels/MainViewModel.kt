@@ -13,6 +13,8 @@ import com.example.portfolio.viewmodels.states.MainScreenTabId.TAB_TWO
 import com.example.portfolio.viewmodels.templates.ViewModelTemplate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 @HiltViewModel
@@ -28,7 +30,9 @@ class MainViewModel @Inject constructor(
     override fun initState() {
         d("MainViewModel", "Initialized posts")
         viewModelScope.launch {
-            repo.getPosts().collect {
+            repo.getPosts()
+                .distinctUntilChanged()
+                .collect {
                 _uiState.emit(
                     _uiState.value.copy(posts = it)
                 )

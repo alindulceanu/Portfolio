@@ -6,6 +6,7 @@ import com.example.portfolio.tools.toDeletedPostsEntity
 import com.example.portfolio.tools.toPostsEntity
 import com.example.portfolio.viewmodels.events.Events.DeletedPostsScreenEvents
 import com.example.portfolio.viewmodels.events.Events.DeletedPostsScreenEvents.CheckPost
+import com.example.portfolio.viewmodels.events.Events.DeletedPostsScreenEvents.RestoreAllPosts
 import com.example.portfolio.viewmodels.events.Events.DeletedPostsScreenEvents.RestorePosts
 import com.example.portfolio.viewmodels.states.States.DeletedPostsState
 import com.example.portfolio.viewmodels.templates.ViewModelTemplate
@@ -61,6 +62,15 @@ class DeletedPostsViewModel @Inject constructor(
                 viewModelScope.launch {
                     _uiState.value.posts
                         .filter { it.isChecked }
+                        .forEach {
+                            repo.setDeletedPost(it.toPostsEntity())
+                        }
+                }
+            }
+
+            RestoreAllPosts -> {
+                viewModelScope.launch {
+                    _uiState.value.posts
                         .forEach {
                             repo.setDeletedPost(it.toPostsEntity())
                         }
