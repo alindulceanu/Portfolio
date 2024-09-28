@@ -1,93 +1,91 @@
 package com.example.portfolio.ui.screens
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment.Companion.BottomEnd
-import androidx.compose.ui.Alignment.Companion.CenterVertically
+import androidx.compose.ui.Alignment.Companion.CenterEnd
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight.Companion.Bold
-import androidx.compose.ui.text.style.TextAlign.Companion.Justify
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
-import com.example.portfolio.Screens.MAIN_SCREEN
+import com.example.portfolio.tools.toPostsEntity
+import com.example.portfolio.ui.screens.components.mainscreen_components.PostsListItem
+import com.example.portfolio.ui.theme.PortfolioTheme
 import com.example.portfolio.viewmodels.events.Events.DeletedPostsScreenEvents
 import com.example.portfolio.viewmodels.events.Events.DeletedPostsScreenEvents.CheckPost
 import com.example.portfolio.viewmodels.events.Events.DeletedPostsScreenEvents.RestoreAllPosts
 import com.example.portfolio.viewmodels.events.Events.DeletedPostsScreenEvents.RestorePosts
+import com.example.portfolio.viewmodels.states.DeletedPosts
 import com.example.portfolio.viewmodels.states.States.DeletedPostsState
 
 
 @Composable
-fun DeletedPostsScreen (nav : NavController, uiState: DeletedPostsState, onEvent: (DeletedPostsScreenEvents) -> Unit, modifier: Modifier = Modifier) {
+fun DeletedPostsScreen(
+    uiState: DeletedPostsState,
+    onEvent: (DeletedPostsScreenEvents) -> Unit,
+) {
+    Scaffold(
+        topBar = { TopButtons({ onEvent(RestorePosts) }, { onEvent(RestoreAllPosts) }) }
+    ) { padding ->
+        LazyColumn(
+            modifier = Modifier.padding(padding)
+        ) {
+            items(uiState.posts) { deletedPost ->
+                Box(
 
-    Scaffold {
-        Box(modifier = modifier.fillMaxSize().padding(it)) {
-            LazyColumn(
-                modifier = modifier.fillMaxWidth()
-            ) {
-                items(uiState.posts) { deletedItem ->
-                    Row(
-                        modifier = modifier.fillMaxWidth(),
-                        verticalAlignment = CenterVertically
-                    ) {
-                        Column (
-                            modifier = modifier.weight(1f)
-                        ){
-                            Text(
-                                text = deletedItem.title,
-                                style = TextStyle(
-                                    fontSize = 25.sp,
-                                    fontWeight = Bold,
-                                ),
-                            )
-
-                            Text(
-                                text = deletedItem.body,
-                                style = TextStyle(
-                                    fontSize = 15.sp,
-                                    textAlign = Justify
-                                )
-                            )
-
-                            Spacer(modifier.height(10.dp))
-                        }
-                        Checkbox(
-                            checked = deletedItem.isChecked,
-                            onCheckedChange = { onEvent(CheckPost(deletedItem)) },
-                            modifier = modifier.padding(start = 16.dp)
-                        )
-                    }
+                ) {
+                    PostsListItem(post = deletedPost.toPostsEntity())
+                    Checkbox(
+                        checked = deletedPost.isChecked,
+                        onCheckedChange = { onEvent(CheckPost(deletedPost)) },
+                        modifier = Modifier
+                            .align(CenterEnd)
+                            .padding(end = 20.dp)
+                    )
                 }
             }
-            Row (
-                modifier = modifier.align(BottomEnd),
-            ) {
+        }
+    }
+}
+
+@Composable
+fun TopButtons(onRestoreClick: () -> Unit, onRestoreAllClick: () -> Unit) {
+    data class Button(val text: String, val action: () -> Unit)
+
+    val buttons = listOf(
+        Button("Restore", onRestoreClick),
+        Button("Restore All", onRestoreAllClick)
+    )
+    Surface(
+        color = colorScheme.primaryContainer,
+        contentColor = colorScheme.primaryContainer,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Row {
+            buttons.forEach { button ->
                 Button(
-                    onClick = { onEvent(RestorePosts) },
+                    onClick = button.action,
+                    modifier = Modifier.weight(1f),
+                    colors = ButtonColors(
+                        containerColor = colorScheme.primaryContainer,
+                        contentColor = colorScheme.onPrimaryContainer,
+                        disabledContentColor = colorScheme.primaryContainer,
+                        disabledContainerColor = colorScheme.primaryContainer
+                    )
                 ) {
-                    Text(text = "Restore")
-                }
-                Button(
-                    onClick = { onEvent(RestoreAllPosts) },
-                ) {
-                    Text(text = "Restore All")
+                    Text(text = button.text)
                 }
             }
         }
@@ -97,5 +95,23 @@ fun DeletedPostsScreen (nav : NavController, uiState: DeletedPostsState, onEvent
 @Preview
 @Composable
 fun PreviewDeletedPostsScreen() {
-    DeletedPostsScreen(rememberNavController(), uiState = DeletedPostsState(), {} )
+    PortfolioTheme {
+        Surface(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(colorScheme.background),
+            tonalElevation = 1.dp
+        ) {
+            DeletedPostsScreen(
+                uiState = DeletedPostsState(
+                    posts = listOf(
+                        DeletedPosts(
+                            0,
+                            "Bla Bla",
+                            "Bla Bla Bla"
+                        )
+                    )
+                ), {})
+        }
+    }
 }
