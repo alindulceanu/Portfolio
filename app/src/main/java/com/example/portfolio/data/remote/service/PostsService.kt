@@ -7,5 +7,5 @@ interface PostsService {
 
     suspend fun getPosts(): List<PostResponse>
 
-    suspend fun createPosts(postRequest: PostRequest) : PostResponse?
+    suspend fun createPosts(postRequest: PostRequest): PostResponse?
 }

@@ -1,6 +1,5 @@
 package com.example.portfolio.viewmodels.events
 
-import android.media.metrics.Event
 import com.example.portfolio.data.local.entities.PostsEntity
 import com.example.portfolio.viewmodels.states.DeletedPosts
 import com.example.portfolio.viewmodels.states.MainScreenTabId
@@ -15,7 +14,7 @@ sealed class Events {
     sealed class DeletedPostsScreenEvents : Events() {
         data class CheckPost(val post: DeletedPosts) : DeletedPostsScreenEvents()
         data object RestorePosts : DeletedPostsScreenEvents()
-        data object RestoreAllPosts: DeletedPostsScreenEvents()
+        data object RestoreAllPosts : DeletedPostsScreenEvents()
     }
 
     sealed class PostScreenEvents : Events() {

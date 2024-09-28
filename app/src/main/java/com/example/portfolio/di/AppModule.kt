@@ -26,13 +26,13 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun providePostService(client: HttpClient) : PostsServiceImplementation {
+    fun providePostService(client: HttpClient): PostsServiceImplementation {
         return PostsServiceImplementation(client)
     }
 
     @Provides
     @Singleton
-    fun provideHttpClient() : HttpClient {
+    fun provideHttpClient(): HttpClient {
         return HttpClient(Android) {
             install(Logging) {
                 logger = Logger.DEFAULT
@@ -47,13 +47,16 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideMainRepository(postsService: PostsServiceImplementation, postsDao: PostsDao) : MainRepository {
+    fun provideMainRepository(
+        postsService: PostsServiceImplementation,
+        postsDao: PostsDao
+    ): MainRepository {
         return MainRepository(postsService = postsService, postsDao = postsDao)
     }
 
     @Provides
     @Singleton
-    fun providePostsDatabase(context: Application) : PostsDatabase {
+    fun providePostsDatabase(context: Application): PostsDatabase {
         return Room.databaseBuilder(
             context,
             PostsDatabase::class.java,

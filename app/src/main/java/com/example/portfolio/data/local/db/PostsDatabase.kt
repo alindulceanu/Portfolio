@@ -6,6 +6,6 @@ import com.example.portfolio.data.local.dao.PostsDao
 import com.example.portfolio.data.local.entities.PostsEntity
 
 @Database(version = 1, entities = [PostsEntity::class])
-abstract class PostsDatabase : RoomDatabase(){
+abstract class PostsDatabase : RoomDatabase() {
     abstract fun postsDao(): PostsDao
 }

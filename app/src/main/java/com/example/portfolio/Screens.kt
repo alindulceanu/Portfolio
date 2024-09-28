@@ -2,10 +2,8 @@ package com.example.portfolio
 
 import androidx.compose.material.icons.Icons.Default
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.ui.graphics.vector.ImageVector
 
 enum class Screens(val route: String, val icon: ImageVector, val forNavbar: Boolean) {

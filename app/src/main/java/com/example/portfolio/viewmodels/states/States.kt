@@ -17,7 +17,7 @@ sealed class States {
 }
 
 
-data class DeletedPosts (
+data class DeletedPosts(
     val id: Int,
     val title: String,
     val body: String,

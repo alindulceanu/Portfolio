@@ -7,20 +7,20 @@ import com.example.portfolio.viewmodels.events.Events.MainScreenEvents
 import com.example.portfolio.viewmodels.events.Events.MainScreenEvents.ChangeTab
 import com.example.portfolio.viewmodels.events.Events.MainScreenEvents.DeletePost
 import com.example.portfolio.viewmodels.events.Events.MainScreenEvents.FavoritePost
-import com.example.portfolio.viewmodels.states.States.MainState
 import com.example.portfolio.viewmodels.states.MainScreenTabId.TAB_ONE
 import com.example.portfolio.viewmodels.states.MainScreenTabId.TAB_TWO
+import com.example.portfolio.viewmodels.states.States.MainState
 import com.example.portfolio.viewmodels.templates.ViewModelTemplate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val repo: MainRepository
-): ViewModelTemplate<MainState, MainScreenEvents>() {
+) : ViewModelTemplate<MainState, MainScreenEvents>() {
     override val _uiState = MutableStateFlow(MainState())
 
     init {
@@ -33,10 +33,10 @@ class MainViewModel @Inject constructor(
             repo.getPosts()
                 .distinctUntilChanged()
                 .collect {
-                _uiState.emit(
-                    _uiState.value.copy(posts = it)
-                )
-            }
+                    _uiState.emit(
+                        _uiState.value.copy(posts = it)
+                    )
+                }
         }
     }
 

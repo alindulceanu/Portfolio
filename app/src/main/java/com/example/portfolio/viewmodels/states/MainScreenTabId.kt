@@ -1,6 +1,5 @@
 package com.example.portfolio.viewmodels.states
 
-import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.Icons.Default
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
