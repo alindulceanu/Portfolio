@@ -3,12 +3,12 @@ package com.example.portfolio
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LargeFloatingActionButton
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -18,7 +18,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -64,7 +63,8 @@ fun Navigation() {
     Scaffold(
         bottomBar = {
             MyNavigationBar(navController)
-        }
+        },
+        floatingActionButton = { MainFloatingActionButton(navController) }
     ) { padding ->
         NavHost(
             navController = navController,
@@ -83,7 +83,7 @@ fun Navigation() {
             composable(DELETED_POST_SCREEN.route) {
                 val viewModel = hiltViewModel<DeletedPostsViewModel>()
                 val uiState by viewModel.uiState.collectAsState()
-                DeletedPostsScreen(navController, uiState, viewModel::onEvent)
+                DeletedPostsScreen(uiState, viewModel::onEvent)
             }
         }
     }
@@ -93,24 +93,35 @@ fun Navigation() {
 fun MyNavigationBar(nav: NavController) {
     NavigationBar(
         modifier = Modifier.fillMaxWidth(),
-        containerColor = colorScheme.secondaryContainer,
-        contentColor = colorScheme.onSecondaryContainer,
+        containerColor = colorScheme.primaryContainer,
+        contentColor = colorScheme.onPrimaryContainer,
     ) {
         Screens.entries
             .filter { it.forNavbar }
             .forEach { screen ->
-            NavigationBarItem(
-                selected = nav.currentBackStackEntry?.destination?.route == screen.route,
-                onClick = { nav.navigate(screen.route) },
-                icon = { Icon(screen.icon, contentDescription = null) },
-            )
-        }
+                NavigationBarItem(
+                    selected = nav.currentBackStackEntry?.destination?.route == screen.route,
+                    onClick = { nav.navigate(screen.route) },
+                    icon = { Icon(screen.icon, contentDescription = null) },
+                )
+            }
+    }
+}
+
+@Composable
+fun MainFloatingActionButton(nav: NavController) {
+    LargeFloatingActionButton(
+        onClick = { nav.navigate(POST_SCREEN.route) },
+        containerColor = colorScheme.tertiaryContainer,
+        contentColor = colorScheme.onTertiaryContainer
+    ) {
+        Icon(POST_SCREEN.icon, contentDescription = null)
     }
 }
 
 @PreviewLightDark
 @Composable
-fun PreviewApp(){
+fun PreviewApp() {
     PortfolioTheme {
         Surface(
             modifier = Modifier
