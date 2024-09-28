@@ -18,6 +18,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -46,7 +48,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier
                         .fillMaxSize()
                         .background(colorScheme.background),
-                    tonalElevation = 3.dp
+                    tonalElevation = 1.dp
                 )
                 {
                     Navigation()
@@ -102,6 +104,22 @@ fun MyNavigationBar(nav: NavController) {
                 onClick = { nav.navigate(screen.route) },
                 icon = { Icon(screen.icon, contentDescription = null) },
             )
+        }
+    }
+}
+
+@PreviewLightDark
+@Composable
+fun PreviewApp(){
+    PortfolioTheme {
+        Surface(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(colorScheme.background),
+            tonalElevation = 1.dp
+        )
+        {
+            Navigation()
         }
     }
 }

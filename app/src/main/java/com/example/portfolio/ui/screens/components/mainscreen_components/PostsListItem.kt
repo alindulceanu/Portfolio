@@ -1,10 +1,12 @@
 package com.example.portfolio.ui.screens.components.mainscreen_components
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.layout.Arrangement.Center
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
@@ -12,6 +14,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults.cardColors
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.MaterialTheme.typography
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -22,9 +25,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.style.TextOverflow.Companion.Ellipsis
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.example.portfolio.data.local.entities.PostsEntity
+import com.example.portfolio.ui.theme.PortfolioTheme
 import com.example.portfolio.viewmodels.events.Events
 import com.example.portfolio.viewmodels.events.Events.MainScreenEvents
 import com.example.portfolio.viewmodels.events.Events.MainScreenEvents.FavoritePost
@@ -96,6 +101,30 @@ fun PostsListItem(post: PostsEntity, onFavorite: () -> Unit, onDelete: () -> Uni
                 color = colorScheme.onSurfaceVariant,
                 overflow = Ellipsis,
             )
+        }
+    }
+}
+
+@PreviewLightDark
+@Composable
+fun PreviewPostsListItem(){
+    PortfolioTheme {
+        Surface(
+            modifier = Modifier
+                .background(colorScheme.background),
+            tonalElevation = 3.dp
+        ) {
+            Column {
+                PostsListItem(
+                    post = PostsEntity(id = 0, title = "Bla Bla", body = "Bla Bla Bla"),
+                    {},
+                    {})
+
+                PostsListItem(
+                    post = PostsEntity(id = 0, title = "Bla Bla", body = "Bla Bla Bla", isFavorited = true),
+                    {},
+                    {})
+            }
         }
     }
 }

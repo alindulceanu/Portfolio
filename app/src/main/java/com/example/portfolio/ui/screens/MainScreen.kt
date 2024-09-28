@@ -3,7 +3,9 @@ package com.example.portfolio.ui.screens
 import android.util.Log.d
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -15,6 +17,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
@@ -31,13 +34,17 @@ import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.portfolio.data.local.entities.PostsEntity
 import com.example.portfolio.ui.screens.components.mainscreen_components.PostsListItem
+import com.example.portfolio.ui.theme.PortfolioTheme
 import com.example.portfolio.viewmodels.events.Events.MainScreenEvents
 import com.example.portfolio.viewmodels.events.Events.MainScreenEvents.ChangeTab
 import com.example.portfolio.viewmodels.events.Events.MainScreenEvents.DeletePost
 import com.example.portfolio.viewmodels.events.Events.MainScreenEvents.FavoritePost
 import com.example.portfolio.viewmodels.states.MainScreenTabId
+import com.example.portfolio.viewmodels.states.MainScreenTabId.TAB_TWO
 import com.example.portfolio.viewmodels.states.States.MainState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.StateFlow
@@ -117,5 +124,24 @@ fun TopTabs(uiState: MainState, onClick: (MainScreenTabId) -> Unit) {
 @Composable
 @PreviewLightDark
 fun PreviewMainScreen() {
-TODO()
+    PortfolioTheme {
+        Surface(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(colorScheme.background),
+            tonalElevation = 1.dp
+        ) {
+            MainScreen(
+                MainState(
+                    posts = (0..10).map { id ->
+                        if(id % 2 == 0)
+                            PostsEntity(id, "Bla Bla", "BlaBlaBla")
+                        else
+                            PostsEntity(id, "Bla Bla", "BlaBlaBla", isFavorited = true)
+                    },
+                    selectedTab = TAB_TWO
+                )
+            ) { }
+        }
+    }
 }
