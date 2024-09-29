@@ -18,11 +18,15 @@ class MainRepository @Inject constructor(
 ) {
     init {
         CoroutineScope(IO).launch {
-            postsDao.updateDb(
+            postsDao.updateDbFromClient(
                 postsService.getPosts().map {
                     it.toEntity()
                 })
         }
+    }
+
+    fun getPosts(): Flow<List<PostsEntity>> {
+        return postsDao.getAvailablePosts()
     }
 
     fun getFavoritedPosts(): Flow<List<PostsEntity>> {
@@ -39,10 +43,6 @@ class MainRepository @Inject constructor(
 
     suspend fun setDeletedPost(post: PostsEntity) {
         postsDao.updatePost(post.copy(isDeleted = !post.isDeleted))
-    }
-
-    fun getPosts(): Flow<List<PostsEntity>> {
-        return postsDao.getAvailablePosts()
     }
 
     suspend fun createPosts(postRequest: PostRequest): PostResponse? {
