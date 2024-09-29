@@ -1,74 +1,67 @@
 package com.example.portfolio.viewmodels
 
-import android.util.Log.d
 import androidx.lifecycle.viewModelScope
 import com.example.portfolio.data.MainRepository
 import com.example.portfolio.viewmodels.events.Events.MainScreenEvents
 import com.example.portfolio.viewmodels.events.Events.MainScreenEvents.ChangeTab
 import com.example.portfolio.viewmodels.events.Events.MainScreenEvents.DeletePost
 import com.example.portfolio.viewmodels.events.Events.MainScreenEvents.FavoritePost
+import com.example.portfolio.viewmodels.states.MainScreenTabId
 import com.example.portfolio.viewmodels.states.MainScreenTabId.TAB_ONE
 import com.example.portfolio.viewmodels.states.MainScreenTabId.TAB_TWO
-import com.example.portfolio.viewmodels.states.States.MainState
+import com.example.portfolio.viewmodels.states.States.MainStates.MainState
+import com.example.portfolio.viewmodels.states.States.MainStates.MainUiState
 import com.example.portfolio.viewmodels.templates.ViewModelTemplate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val repo: MainRepository
-) : ViewModelTemplate<MainState, MainScreenEvents>() {
-    override val _uiState = MutableStateFlow(MainState())
+) : ViewModelTemplate<MainScreenEvents>() {
 
-    init {
-        initState()
-    }
+    private val currentTab: MutableStateFlow<MainScreenTabId> = MutableStateFlow(TAB_ONE)
 
-    override fun initState() {
-        d("MainViewModel", "Initialized posts")
-        viewModelScope.launch {
-            repo.getPosts()
-                .distinctUntilChanged()
-                .collect {
-                    _uiState.emit(
-                        _uiState.value.copy(posts = it)
-                    )
-                }
+    val state: StateFlow<MainState> = currentTab
+        .flatMapLatest { tab ->
+            when (tab) {
+                TAB_ONE -> repo.getPosts()
+                TAB_TWO -> repo.getFavoritedPosts()
+            }.map { postsList ->
+                MainState(
+                    posts = postsList,
+                    uiState = MainUiState(selectedTab = tab)
+                )
+            }
         }
-    }
+        .stateIn(
+            scope = viewModelScope,
+            started = WhileSubscribed(5_000),
+            initialValue = MainState()
+        )
+
 
     override fun onEvent(event: MainScreenEvents) {
-        when (event) {
-            is ChangeTab -> {
-                viewModelScope.launch {
-                    d("MainViewModel", "Changing to ${event.tabNumber}")
-                    when (event.tabNumber) {
-                        TAB_ONE -> repo.getPosts()
-                        TAB_TWO -> repo.getFavoritedPosts()
-                    }.collect {
-                        _uiState.emit(
-                            _uiState.value.copy(
-                                selectedTab = event.tabNumber,
-                                posts = it
-                            )
-                        )
-                    }
+        viewModelScope.launch {
+            when (event) {
+                is ChangeTab -> {
+                    currentTab.value = event.tabNumber
                 }
-            }
 
-            is DeletePost -> {
-                viewModelScope.launch {
+                is DeletePost -> {
                     repo.setDeletedPost(event.post)
                     if (event.post.isFavorited)
                         repo.setFavoritePost(event.post)
                 }
-            }
 
-            is FavoritePost -> {
-                viewModelScope.launch {
+                is FavoritePost -> {
                     repo.setFavoritePost(event.post)
                 }
             }

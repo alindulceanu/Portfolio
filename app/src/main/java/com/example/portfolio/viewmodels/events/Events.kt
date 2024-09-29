@@ -1,7 +1,6 @@
 package com.example.portfolio.viewmodels.events
 
 import com.example.portfolio.data.local.entities.PostsEntity
-import com.example.portfolio.viewmodels.states.DeletedPosts
 import com.example.portfolio.viewmodels.states.MainScreenTabId
 
 sealed class Events {
@@ -12,7 +11,7 @@ sealed class Events {
     }
 
     sealed class DeletedPostsScreenEvents : Events() {
-        data class CheckPost(val post: DeletedPosts) : DeletedPostsScreenEvents()
+        data class CheckPost(val post: PostsEntity) : DeletedPostsScreenEvents()
         data object RestorePosts : DeletedPostsScreenEvents()
         data object RestoreAllPosts : DeletedPostsScreenEvents()
     }

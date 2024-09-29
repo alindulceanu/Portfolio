@@ -12,6 +12,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.MaterialTheme.colorScheme
+import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -20,20 +21,19 @@ import androidx.compose.ui.Alignment.Companion.CenterEnd
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.portfolio.tools.toPostsEntity
+import com.example.portfolio.data.local.entities.PostsEntity
 import com.example.portfolio.ui.screens.components.mainscreen_components.PostsListItem
 import com.example.portfolio.ui.theme.PortfolioTheme
 import com.example.portfolio.viewmodels.events.Events.DeletedPostsScreenEvents
 import com.example.portfolio.viewmodels.events.Events.DeletedPostsScreenEvents.CheckPost
 import com.example.portfolio.viewmodels.events.Events.DeletedPostsScreenEvents.RestoreAllPosts
 import com.example.portfolio.viewmodels.events.Events.DeletedPostsScreenEvents.RestorePosts
-import com.example.portfolio.viewmodels.states.DeletedPosts
-import com.example.portfolio.viewmodels.states.States.DeletedPostsState
+import com.example.portfolio.viewmodels.states.States.DeletesPostsStates.DeletedPostsState
 
 
 @Composable
 fun DeletedPostsScreen(
-    uiState: DeletedPostsState,
+    state: DeletedPostsState,
     onEvent: (DeletedPostsScreenEvents) -> Unit,
 ) {
     Scaffold(
@@ -42,13 +42,11 @@ fun DeletedPostsScreen(
         LazyColumn(
             modifier = Modifier.padding(padding)
         ) {
-            items(uiState.posts) { deletedPost ->
-                Box(
-
-                ) {
-                    PostsListItem(post = deletedPost.toPostsEntity())
+            items(state.posts) { deletedPost ->
+                Box {
+                    PostsListItem(post = deletedPost)
                     Checkbox(
-                        checked = deletedPost.isChecked,
+                        checked = deletedPost.id in state.uiState.checkedPosts,
                         onCheckedChange = { onEvent(CheckPost(deletedPost)) },
                         modifier = Modifier
                             .align(CenterEnd)
@@ -85,7 +83,10 @@ fun TopButtons(onRestoreClick: () -> Unit, onRestoreAllClick: () -> Unit) {
                         disabledContainerColor = colorScheme.primaryContainer
                     )
                 ) {
-                    Text(text = button.text)
+                    Text(
+                        text = button.text,
+                        style = typography.labelLarge
+                    )
                 }
             }
         }
@@ -103,9 +104,9 @@ fun PreviewDeletedPostsScreen() {
             tonalElevation = 1.dp
         ) {
             DeletedPostsScreen(
-                uiState = DeletedPostsState(
+                state = DeletedPostsState(
                     posts = listOf(
-                        DeletedPosts(
+                        PostsEntity(
                             0,
                             "Bla Bla",
                             "Bla Bla Bla"

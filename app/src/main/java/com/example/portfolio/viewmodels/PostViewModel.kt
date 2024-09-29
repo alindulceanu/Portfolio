@@ -5,11 +5,9 @@ import com.example.portfolio.data.MainRepository
 import com.example.portfolio.data.remote.dto.PostRequest
 import com.example.portfolio.viewmodels.events.Events.PostScreenEvents
 import com.example.portfolio.viewmodels.events.Events.PostScreenEvents.PostEntity
-import com.example.portfolio.viewmodels.states.States.EmptyState
 import com.example.portfolio.viewmodels.templates.ViewModelTemplate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -17,8 +15,7 @@ import javax.inject.Inject
 @HiltViewModel
 class PostViewModel @Inject constructor(
     private val repo: MainRepository
-) : ViewModelTemplate<EmptyState, PostScreenEvents>() {
-    override val _uiState = MutableStateFlow(EmptyState)
+) : ViewModelTemplate<PostScreenEvents>() {
 
     override fun onEvent(event: PostScreenEvents) {
         when (event) {

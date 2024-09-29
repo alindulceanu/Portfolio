@@ -73,7 +73,7 @@ fun Navigation() {
         ) {
             composable(MAIN_SCREEN.route) {
                 val viewModel = hiltViewModel<MainViewModel>()
-                val uiState by viewModel.uiState.collectAsState()
+                val uiState by viewModel.state.collectAsState()
                 MainScreen(uiState, viewModel::onEvent)
             }
             composable(POST_SCREEN.route) {
@@ -82,7 +82,7 @@ fun Navigation() {
             }
             composable(DELETED_POST_SCREEN.route) {
                 val viewModel = hiltViewModel<DeletedPostsViewModel>()
-                val uiState by viewModel.uiState.collectAsState()
+                val uiState by viewModel.state.collectAsState()
                 DeletedPostsScreen(uiState, viewModel::onEvent)
             }
         }

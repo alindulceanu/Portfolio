@@ -4,22 +4,27 @@ import com.example.portfolio.data.local.entities.PostsEntity
 import com.example.portfolio.viewmodels.states.MainScreenTabId.TAB_ONE
 
 sealed class States {
-    data class MainState(
-        val posts: List<PostsEntity> = emptyList(),
-        val selectedTab: MainScreenTabId = TAB_ONE
-    ) : States()
+    sealed class MainStates : States() {
+        data class MainState(
+            val posts: List<PostsEntity> = emptyList(),
+            val uiState: MainUiState = MainUiState()
+        ) : MainStates()
 
-    data class DeletedPostsState(
-        val posts: List<DeletedPosts> = emptyList()
-    ) : States()
+        data class MainUiState(
+            val selectedTab: MainScreenTabId = TAB_ONE
+        ) : MainStates()
+    }
+
+    sealed class DeletesPostsStates : States() {
+        data class DeletedPostsState(
+            val posts: List<PostsEntity> = emptyList(),
+            val uiState: DeletedPostsUiState = DeletedPostsUiState()
+        ) : DeletesPostsStates()
+
+        data class DeletedPostsUiState(
+            val checkedPosts: Set<Int> = emptySet()
+        ) : DeletesPostsStates()
+    }
 
     data object EmptyState : States()
 }
-
-
-data class DeletedPosts(
-    val id: Int,
-    val title: String,
-    val body: String,
-    var isChecked: Boolean = false
-)

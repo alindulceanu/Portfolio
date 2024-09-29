@@ -43,23 +43,24 @@ import com.example.portfolio.viewmodels.events.Events.MainScreenEvents.DeletePos
 import com.example.portfolio.viewmodels.events.Events.MainScreenEvents.FavoritePost
 import com.example.portfolio.viewmodels.states.MainScreenTabId
 import com.example.portfolio.viewmodels.states.MainScreenTabId.TAB_TWO
-import com.example.portfolio.viewmodels.states.States.MainState
+import com.example.portfolio.viewmodels.states.States
+import com.example.portfolio.viewmodels.states.States.MainStates.MainState
 import kotlinx.coroutines.delay
 import kotlin.math.absoluteValue
 import kotlin.math.roundToInt
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun MainScreen(uiState: MainState, onEvent: (MainScreenEvents) -> Unit) {
+fun MainScreen(state: MainState, onEvent: (MainScreenEvents) -> Unit) {
     d("Main_Screen", "Recomposition")
     Scaffold(
-        topBar = { TopTabs(uiState) { onEvent(ChangeTab(it)) } },
+        topBar = { TopTabs(state) { onEvent(ChangeTab(it)) } },
         floatingActionButton = {},
         floatingActionButtonPosition = End
     ) {
         LazyColumn(modifier = Modifier.padding(it)) {
             items(
-                items = uiState.posts,
+                items = state.posts,
                 key = { post -> post.id },
             ) { post ->
                 var visible by remember {
@@ -71,6 +72,7 @@ fun MainScreen(uiState: MainState, onEvent: (MainScreenEvents) -> Unit) {
                         onEvent(DeletePost(post))
                     }
                 }
+
                 val onDelete: () -> Unit = {
                     visible = false
                 }
@@ -113,13 +115,13 @@ fun MainScreen(uiState: MainState, onEvent: (MainScreenEvents) -> Unit) {
 @Composable
 fun TopTabs(uiState: MainState, onClick: (MainScreenTabId) -> Unit) {
     TabRow(
-        selectedTabIndex = uiState.selectedTab.ordinal,
+        selectedTabIndex = uiState.uiState.selectedTab.ordinal,
         containerColor = colorScheme.primaryContainer,
         contentColor = colorScheme.onPrimaryContainer,
     ) {
         MainScreenTabId.entries.forEach { tab ->
             Tab(
-                selected = tab == uiState.selectedTab,
+                selected = tab == uiState.uiState.selectedTab,
                 onClick = { onClick(tab) },
             ) {
                 Column(
@@ -156,7 +158,7 @@ fun PreviewMainScreen() {
                         else
                             PostsEntity(id, "Bla Bla", "BlaBlaBla", isFavorited = true)
                     },
-                    selectedTab = TAB_TWO
+                    uiState = States.MainStates.MainUiState(TAB_TWO)
                 )
             ) { }
         }
