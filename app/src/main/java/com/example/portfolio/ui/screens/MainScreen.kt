@@ -2,20 +2,31 @@ package com.example.portfolio.ui.screens
 
 import android.util.Log.d
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.VectorConverter
+import androidx.compose.animation.core.animateValue
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.progressSemantics
 import androidx.compose.material3.FabPosition.Companion.End
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.MaterialTheme.typography
+import androidx.compose.material3.ProgressIndicatorDefaults.CircularStrokeWidth
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Tab
@@ -28,30 +39,47 @@ import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.LightGray
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.PreviewLightDark
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.example.portfolio.data.local.entities.PostsEntity
-import com.example.portfolio.ui.screens.components.mainscreen_components.PostsListItem
+import com.example.portfolio.ui.screens.components.OnLoading
+import com.example.portfolio.ui.screens.components.PostsListItem
 import com.example.portfolio.ui.theme.PortfolioTheme
-import com.example.portfolio.viewmodels.events.Events.MainScreenEvents
-import com.example.portfolio.viewmodels.events.Events.MainScreenEvents.ChangeTab
-import com.example.portfolio.viewmodels.events.Events.MainScreenEvents.DeletePost
-import com.example.portfolio.viewmodels.events.Events.MainScreenEvents.FavoritePost
-import com.example.portfolio.viewmodels.states.MainScreenTabId
-import com.example.portfolio.viewmodels.states.MainScreenTabId.TAB_TWO
-import com.example.portfolio.viewmodels.states.States
-import com.example.portfolio.viewmodels.states.States.MainStates.MainState
+import com.example.portfolio.viewmodels.MainViewModel
+import com.example.portfolio.viewmodels.MainViewModel.Events.ChangeTab
+import com.example.portfolio.viewmodels.MainViewModel.Events.DeletePost
+import com.example.portfolio.viewmodels.MainViewModel.Events.FavoritePost
+import com.example.portfolio.viewmodels.MainViewModel.MainScreenTabId
+import com.example.portfolio.viewmodels.MainViewModel.MainScreenTabId.TAB_TWO
+import com.example.portfolio.viewmodels.MainViewModel.States.Loading
+import com.example.portfolio.viewmodels.MainViewModel.States.MainState
 import kotlinx.coroutines.delay
 import kotlin.math.absoluteValue
 import kotlin.math.roundToInt
 
+
+@Composable
+fun MainScreen (state: MainViewModel.States, onEvent: (MainViewModel.Events) -> Unit) {
+    when (state) {
+        Loading -> OnLoading()
+        is MainState -> MainScreenList(state) { onEvent(it) }
+    }
+}
+
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun MainScreen(state: MainState, onEvent: (MainScreenEvents) -> Unit) {
+fun MainScreenList(state: MainState, onEvent: (MainViewModel.Events) -> Unit) {
     d("Main_Screen", "Recomposition")
     Scaffold(
         topBar = { TopTabs(state) { onEvent(ChangeTab(it)) } },
@@ -113,15 +141,15 @@ fun MainScreen(state: MainState, onEvent: (MainScreenEvents) -> Unit) {
 }
 
 @Composable
-fun TopTabs(uiState: MainState, onClick: (MainScreenTabId) -> Unit) {
+fun TopTabs(state: MainState, onClick: (MainScreenTabId) -> Unit) {
     TabRow(
-        selectedTabIndex = uiState.uiState.selectedTab.ordinal,
+        selectedTabIndex = state.selectedTab.ordinal,
         containerColor = colorScheme.primaryContainer,
         contentColor = colorScheme.onPrimaryContainer,
     ) {
         MainScreenTabId.entries.forEach { tab ->
             Tab(
-                selected = tab == uiState.uiState.selectedTab,
+                selected = tab == state.selectedTab,
                 onClick = { onClick(tab) },
             ) {
                 Column(
@@ -158,7 +186,7 @@ fun PreviewMainScreen() {
                         else
                             PostsEntity(id, "Bla Bla", "BlaBlaBla", isFavorited = true)
                     },
-                    uiState = States.MainStates.MainUiState(TAB_TWO)
+                    selectedTab = TAB_TWO
                 )
             ) { }
         }

@@ -1,6 +1,7 @@
 package com.example.portfolio
 
 import android.os.Bundle
+import android.util.Log.d
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
@@ -41,6 +42,8 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        d("MainActivity", "onCreate()")
+        this.
         setContent {
             PortfolioTheme {
                 Surface(
@@ -54,6 +57,36 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        d("MainActivity", "onStart()")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        d("MainActivity", "onResume()")
+    }
+
+    override fun onPause() {
+        super.onPause()
+        d("MainActivity", "onPause()")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        d("MainActivity", "onStop()")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        d("MainActivity", "onDestroy()")
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        d("MainActivity", "onRestart()")
     }
 }
 
@@ -78,7 +111,7 @@ fun Navigation() {
             }
             composable(POST_SCREEN.route) {
                 val viewModel = hiltViewModel<PostViewModel>()
-                PostScreen(navController, viewModel::onEvent)
+                PostScreen(viewModel::onEvent)
             }
             composable(DELETED_POST_SCREEN.route) {
                 val viewModel = hiltViewModel<DeletedPostsViewModel>()

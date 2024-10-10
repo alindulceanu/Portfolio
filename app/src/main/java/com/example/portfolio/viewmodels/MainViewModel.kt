@@ -1,18 +1,19 @@
 package com.example.portfolio.viewmodels
 
+import androidx.compose.material.icons.Icons.Default
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.portfolio.data.MainRepository
-import com.example.portfolio.viewmodels.events.Events.MainScreenEvents
-import com.example.portfolio.viewmodels.events.Events.MainScreenEvents.ChangeTab
-import com.example.portfolio.viewmodels.events.Events.MainScreenEvents.DeletePost
-import com.example.portfolio.viewmodels.events.Events.MainScreenEvents.FavoritePost
-import com.example.portfolio.viewmodels.states.MainScreenTabId
-import com.example.portfolio.viewmodels.states.MainScreenTabId.TAB_ONE
-import com.example.portfolio.viewmodels.states.MainScreenTabId.TAB_TWO
-import com.example.portfolio.viewmodels.states.States.MainStates.MainState
-import com.example.portfolio.viewmodels.states.States.MainStates.MainUiState
-import com.example.portfolio.viewmodels.templates.ViewModelTemplate
+import com.example.portfolio.data.local.entities.PostsEntity
+import com.example.portfolio.viewmodels.MainViewModel.MainScreenTabId.TAB_ONE
+import com.example.portfolio.viewmodels.MainViewModel.MainScreenTabId.TAB_TWO
+import com.example.portfolio.viewmodels.MainViewModel.States.Loading
+import com.example.portfolio.viewmodels.MainViewModel.States.MainState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
 import kotlinx.coroutines.flow.StateFlow
@@ -22,14 +23,16 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val repo: MainRepository
-) : ViewModelTemplate<MainScreenEvents>() {
+) : ViewModel() {
 
     private val currentTab: MutableStateFlow<MainScreenTabId> = MutableStateFlow(TAB_ONE)
 
-    val state: StateFlow<MainState> = currentTab
+
+    val state: StateFlow<States> = currentTab
         .flatMapLatest { tab ->
             when (tab) {
                 TAB_ONE -> repo.getPosts()
@@ -37,34 +40,51 @@ class MainViewModel @Inject constructor(
             }.map { postsList ->
                 MainState(
                     posts = postsList,
-                    uiState = MainUiState(selectedTab = tab)
+                    selectedTab =  tab
                 )
             }
         }
         .stateIn(
             scope = viewModelScope,
             started = WhileSubscribed(5_000),
-            initialValue = MainState()
+            initialValue = Loading
         )
 
 
-    override fun onEvent(event: MainScreenEvents) {
+    fun onEvent(event: Events) {
         viewModelScope.launch {
             when (event) {
-                is ChangeTab -> {
+                is Events.ChangeTab -> {
                     currentTab.value = event.tabNumber
                 }
 
-                is DeletePost -> {
+                is Events.DeletePost -> {
                     repo.setDeletedPost(event.post)
-                    if (event.post.isFavorited)
-                        repo.setFavoritePost(event.post)
                 }
 
-                is FavoritePost -> {
+                is Events.FavoritePost -> {
                     repo.setFavoritePost(event.post)
                 }
             }
         }
+    }
+
+    sealed class States {
+        data class MainState(
+            val posts: List<PostsEntity> = emptyList(),
+            val selectedTab: MainScreenTabId = TAB_ONE
+        ) : States()
+        object Loading : States()
+    }
+
+    sealed class Events {
+        data class FavoritePost(val post: PostsEntity) : Events()
+        data class DeletePost(val post: PostsEntity) : Events()
+        data class ChangeTab(val tabNumber: MainScreenTabId) : Events()
+    }
+
+    enum class MainScreenTabId(val text: String, val icon: ImageVector) {
+        TAB_ONE("Home", Default.Home),
+        TAB_TWO("Favorite", Default.Favorite)
     }
 }

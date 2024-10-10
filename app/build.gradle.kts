@@ -61,6 +61,8 @@ val ktor_version: String by project
 val nav_version = "2.8.1"
 val room_version = "2.6.1"
 dependencies {
+    // Glide
+    implementation("com.github.bumptech.glide:compose:1.0.0-beta01")
     // Room
     implementation("androidx.room:room-runtime:$room_version")
     testImplementation(libs.junit.junit)

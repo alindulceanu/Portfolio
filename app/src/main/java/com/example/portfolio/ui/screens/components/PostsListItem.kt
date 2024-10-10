@@ -1,8 +1,13 @@
-package com.example.portfolio.ui.screens.components.mainscreen_components
+package com.example.portfolio.ui.screens.components
 
+import android.annotation.SuppressLint
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateIntAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement.Center
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -25,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import com.example.portfolio.data.local.entities.PostsEntity
 import com.example.portfolio.ui.theme.PortfolioTheme
 
+@SuppressLint("UnrememberedMutableInteractionSource")
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun PostsListItem(
@@ -33,15 +39,21 @@ fun PostsListItem(
     onLongClick: (() -> Unit)? = null,
     onDoubleClick: (() -> Unit)? = null
 ) {
-    val containerColor = if (post.isFavorited) {
-        colorScheme.primary
-    } else {
-        colorScheme.secondaryContainer
-    }
+    val containerColorAnimation by animateColorAsState(
+        targetValue = if (post.isFavorited) colorScheme.primary else colorScheme.secondaryContainer,
+        label = "Color Animation",
+        animationSpec = tween()
+    )
 
     var collapsed by remember {
         mutableStateOf(true)
     }
+
+    val collapsedAnimation by animateIntAsState(
+        targetValue = if (collapsed) 2 else 20,
+        label = "Collapsed Animation",
+        animationSpec = tween()
+    )
 
     val onClick: () -> Unit = { collapsed = !collapsed }
 
@@ -52,9 +64,11 @@ fun PostsListItem(
                 onClick = onClick,
                 onLongClick = onLongClick,
                 onDoubleClick = onDoubleClick,
+                interactionSource = MutableInteractionSource(),
+                indication = null
             ),
         colors = cardColors(
-            containerColor = containerColor
+            containerColor = containerColorAnimation
         )
     ) {
         Column(
@@ -72,7 +86,7 @@ fun PostsListItem(
             Text(
                 text = post.body,
                 style = typography.bodyLarge,
-                maxLines = if (collapsed) 2 else Int.MAX_VALUE,
+                maxLines = collapsedAnimation,
                 overflow = Ellipsis,
             )
         }

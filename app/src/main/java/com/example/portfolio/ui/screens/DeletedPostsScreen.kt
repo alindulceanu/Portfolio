@@ -22,19 +22,32 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.portfolio.data.local.entities.PostsEntity
-import com.example.portfolio.ui.screens.components.mainscreen_components.PostsListItem
+import com.example.portfolio.ui.screens.components.OnLoading
+import com.example.portfolio.ui.screens.components.PostsListItem
 import com.example.portfolio.ui.theme.PortfolioTheme
-import com.example.portfolio.viewmodels.events.Events.DeletedPostsScreenEvents
-import com.example.portfolio.viewmodels.events.Events.DeletedPostsScreenEvents.CheckPost
-import com.example.portfolio.viewmodels.events.Events.DeletedPostsScreenEvents.RestoreAllPosts
-import com.example.portfolio.viewmodels.events.Events.DeletedPostsScreenEvents.RestorePosts
-import com.example.portfolio.viewmodels.states.States.DeletesPostsStates.DeletedPostsState
+import com.example.portfolio.viewmodels.DeletedPostsViewModel.Events
+import com.example.portfolio.viewmodels.DeletedPostsViewModel.Events.CheckPost
+import com.example.portfolio.viewmodels.DeletedPostsViewModel.Events.RestoreAllPosts
+import com.example.portfolio.viewmodels.DeletedPostsViewModel.Events.RestorePosts
+import com.example.portfolio.viewmodels.DeletedPostsViewModel.States
+import com.example.portfolio.viewmodels.DeletedPostsViewModel.States.DeletedPostsState
 
 
 @Composable
 fun DeletedPostsScreen(
+    state: States,
+    onEvent: (Events) -> Unit
+) {
+    when(state) {
+        is DeletedPostsState -> DeletedPostsScreenList(state) { onEvent(it) }
+        States.Loading -> OnLoading()
+    }
+}
+
+@Composable
+fun DeletedPostsScreenList(
     state: DeletedPostsState,
-    onEvent: (DeletedPostsScreenEvents) -> Unit,
+    onEvent: (Events) -> Unit,
 ) {
     Scaffold(
         topBar = { TopButtons({ onEvent(RestorePosts) }, { onEvent(RestoreAllPosts) }) }
@@ -46,7 +59,7 @@ fun DeletedPostsScreen(
                 Box {
                     PostsListItem(post = deletedPost)
                     Checkbox(
-                        checked = deletedPost.id in state.uiState.checkedPosts,
+                        checked = deletedPost.id in state.checkedPosts,
                         onCheckedChange = { onEvent(CheckPost(deletedPost)) },
                         modifier = Modifier
                             .align(CenterEnd)

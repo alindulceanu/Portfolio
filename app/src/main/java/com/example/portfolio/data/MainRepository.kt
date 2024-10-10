@@ -42,7 +42,10 @@ class MainRepository @Inject constructor(
     }
 
     suspend fun setDeletedPost(post: PostsEntity) {
-        postsDao.updatePost(post.copy(isDeleted = !post.isDeleted))
+        postsDao.updatePost(post.copy(
+            isDeleted = !post.isDeleted,
+            isFavorited = false
+            ))
     }
 
     suspend fun createPosts(postRequest: PostRequest): PostResponse? {

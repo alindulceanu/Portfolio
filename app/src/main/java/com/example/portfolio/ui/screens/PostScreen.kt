@@ -1,11 +1,25 @@
 package com.example.portfolio.ui.screens
 
+import android.widget.Space
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardColors
+import androidx.compose.material3.CardDefaults.cardColors
+import androidx.compose.material3.MaterialTheme.colorScheme
+import androidx.compose.material3.MaterialTheme.shapes
+import androidx.compose.material3.MaterialTheme.typography
+import androidx.compose.material3.Shapes
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -14,59 +28,91 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.Center
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.portfolio.Screens.MAIN_SCREEN
-import com.example.portfolio.viewmodels.events.Events.PostScreenEvents
-import com.example.portfolio.viewmodels.events.Events.PostScreenEvents.PostEntity
+import com.example.portfolio.ui.theme.PortfolioTheme
+import com.example.portfolio.viewmodels.PostViewModel
+import com.example.portfolio.viewmodels.PostViewModel.PostScreenEvents
+import com.example.portfolio.viewmodels.PostViewModel.PostScreenEvents.PostEntity
 
 @Composable
-fun PostScreen(nav: NavController, onEvent: (PostScreenEvents) -> Unit) {
+fun PostScreen(onEvent: (PostScreenEvents) -> Unit) {
+    var title by remember {
+        mutableStateOf("")
+    }
+    var body by remember {
+        mutableStateOf("")
+    }
+
     Box(
-        contentAlignment = Alignment.Center
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Center
     ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            var title by remember {
-                mutableStateOf("")
-            }
-            var body by remember {
-                mutableStateOf("")
-            }
-            TextField(
-                value = title,
-                onValueChange = { title = it },
-                label = { Text(text = "Enter Title") },
-                modifier = Modifier.fillMaxWidth()
-            )
-            TextField(
-                value = body,
-                onValueChange = { body = it },
-                label = { Text(text = "Enter Title") },
-                modifier = Modifier.fillMaxWidth()
-            )
-            Row {
+        Card(
+            modifier = Modifier
+                .padding(vertical = 8.dp, horizontal = 16.dp)
+                .align(Center)
+                .fillMaxWidth()
+                .size(250.dp),
+            shape = shapes.large,
+            colors = cardColors(
+                colorScheme.primaryContainer
+            ),
+            ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = CenterHorizontally
+            ) {
+                TextField(
+                    value = title,
+                    onValueChange = { title = it },
+                    shape = shapes.extraLarge,
+                    textStyle = typography.bodyLarge,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                TextField(
+                    value = body,
+                    onValueChange = { body = it },
+                    shape = shapes.extraLarge,
+                    textStyle = typography.bodyLarge,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Spacer(modifier = Modifier.height(5.dp))
                 Button(
-                    onClick = { onEvent(PostEntity(title, body)) }
+                    onClick = {onEvent(PostEntity(title, body))}
                 ) {
-                    Text("Upload")
-                }
-                Button(
-                    onClick = { nav?.navigate(MAIN_SCREEN.route) }
-                ) {
-                    Text("Back")
+                    Text(
+                        text = "Post",
+                        style = typography.bodyLarge,
+                    )
                 }
             }
         }
     }
 }
 
-@Preview
+@PreviewLightDark
 @Composable
 fun PreviewPostScreen() {
-    PostScreen(rememberNavController()) {}
+    PortfolioTheme {
+        Surface(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(colorScheme.background) ,
+            tonalElevation = 1.dp
+        ) {
+            PostScreen({})
+        }
+    }
 }

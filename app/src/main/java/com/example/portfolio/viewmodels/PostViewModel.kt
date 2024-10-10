@@ -1,11 +1,10 @@
 package com.example.portfolio.viewmodels
 
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.portfolio.data.MainRepository
 import com.example.portfolio.data.remote.dto.PostRequest
-import com.example.portfolio.viewmodels.events.Events.PostScreenEvents
-import com.example.portfolio.viewmodels.events.Events.PostScreenEvents.PostEntity
-import com.example.portfolio.viewmodels.templates.ViewModelTemplate
+import com.example.portfolio.viewmodels.PostViewModel.PostScreenEvents.PostEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
@@ -15,9 +14,9 @@ import javax.inject.Inject
 @HiltViewModel
 class PostViewModel @Inject constructor(
     private val repo: MainRepository
-) : ViewModelTemplate<PostScreenEvents>() {
+) : ViewModel() {
 
-    override fun onEvent(event: PostScreenEvents) {
+     fun onEvent(event: PostScreenEvents) {
         when (event) {
             is PostEntity -> {
                 val request = PostRequest(1, title = event.title, body = event.body)
@@ -28,5 +27,9 @@ class PostViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    sealed class PostScreenEvents {
+        data class PostEntity(val title: String, val body: String) : PostScreenEvents()
     }
 }
