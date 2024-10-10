@@ -1,10 +1,10 @@
-package com.example.portfolio.viewmodels
+package com.example.portfolio.ui.post_screen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.portfolio.data.MainRepository
 import com.example.portfolio.data.remote.dto.PostRequest
-import com.example.portfolio.viewmodels.PostViewModel.PostScreenEvents.PostEntity
+import com.example.portfolio.ui.post_screen.PostViewModel.PostScreenEvents.PostEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch

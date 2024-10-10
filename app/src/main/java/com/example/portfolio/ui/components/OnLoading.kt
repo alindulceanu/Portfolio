@@ -1,4 +1,4 @@
-package com.example.portfolio.ui.screens.components
+package com.example.portfolio.ui.components
 
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.VectorConverter

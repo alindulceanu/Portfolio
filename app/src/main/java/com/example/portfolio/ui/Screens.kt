@@ -1,4 +1,4 @@
-package com.example.portfolio
+package com.example.portfolio.ui
 
 import androidx.compose.material.icons.Icons.Default
 import androidx.compose.material.icons.filled.Add

@@ -26,16 +26,17 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.portfolio.Screens.DELETED_POST_SCREEN
-import com.example.portfolio.Screens.MAIN_SCREEN
-import com.example.portfolio.Screens.POST_SCREEN
-import com.example.portfolio.ui.screens.DeletedPostsScreen
-import com.example.portfolio.ui.screens.MainScreen
-import com.example.portfolio.ui.screens.PostScreen
+import com.example.portfolio.ui.Screens
+import com.example.portfolio.ui.Screens.DELETED_POST_SCREEN
+import com.example.portfolio.ui.Screens.MAIN_SCREEN
+import com.example.portfolio.ui.Screens.POST_SCREEN
+import com.example.portfolio.ui.deleted_posts_screen.DeletedPostsScreen
 import com.example.portfolio.ui.theme.PortfolioTheme
-import com.example.portfolio.viewmodels.DeletedPostsViewModel
-import com.example.portfolio.viewmodels.MainViewModel
-import com.example.portfolio.viewmodels.PostViewModel
+import com.example.portfolio.ui.deleted_posts_screen.DeletedPostsViewModel
+import com.example.portfolio.ui.main_screen.MainViewModel
+import com.example.portfolio.ui.post_screen.PostScreen
+import com.example.portfolio.ui.post_screen.PostViewModel
+import com.example.portfolio.ui.screens.MainScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -58,36 +59,6 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-
-    override fun onStart() {
-        super.onStart()
-        d("MainActivity", "onStart()")
-    }
-
-    override fun onResume() {
-        super.onResume()
-        d("MainActivity", "onResume()")
-    }
-
-    override fun onPause() {
-        super.onPause()
-        d("MainActivity", "onPause()")
-    }
-
-    override fun onStop() {
-        super.onStop()
-        d("MainActivity", "onStop()")
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        d("MainActivity", "onDestroy()")
-    }
-
-    override fun onRestart() {
-        super.onRestart()
-        d("MainActivity", "onRestart()")
-    }
 }
 
 @Composable
@@ -97,7 +68,9 @@ fun Navigation() {
         bottomBar = {
             MyNavigationBar(navController)
         },
-        floatingActionButton = { MainFloatingActionButton(navController) }
+        floatingActionButton = {
+            MainFloatingActionButton(navController)
+        }
     ) { padding ->
         NavHost(
             navController = navController,

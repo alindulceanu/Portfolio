@@ -1,4 +1,4 @@
-package com.example.portfolio.tools
+package com.example.portfolio.tools.commons
 
 import android.util.Log.d
 import io.ktor.client.plugins.ClientRequestException

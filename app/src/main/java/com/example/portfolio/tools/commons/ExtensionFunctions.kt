@@ -1,4 +1,4 @@
-package com.example.portfolio.tools
+package com.example.portfolio.tools.commons
 
 import com.example.portfolio.data.local.entities.PostsEntity
 import com.example.portfolio.data.remote.dto.PostResponse

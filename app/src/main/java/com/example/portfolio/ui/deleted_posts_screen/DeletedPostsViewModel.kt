@@ -1,14 +1,14 @@
-package com.example.portfolio.viewmodels
+package com.example.portfolio.ui.deleted_posts_screen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.portfolio.data.MainRepository
 import com.example.portfolio.data.local.entities.PostsEntity
-import com.example.portfolio.viewmodels.DeletedPostsViewModel.Events.CheckPost
-import com.example.portfolio.viewmodels.DeletedPostsViewModel.Events.RestoreAllPosts
-import com.example.portfolio.viewmodels.DeletedPostsViewModel.Events.RestorePosts
-import com.example.portfolio.viewmodels.DeletedPostsViewModel.States.DeletedPostsState
-import com.example.portfolio.viewmodels.DeletedPostsViewModel.States.Loading
+import com.example.portfolio.ui.deleted_posts_screen.DeletedPostsViewModel.Events.CheckPost
+import com.example.portfolio.ui.deleted_posts_screen.DeletedPostsViewModel.Events.RestoreAllPosts
+import com.example.portfolio.ui.deleted_posts_screen.DeletedPostsViewModel.Events.RestorePosts
+import com.example.portfolio.ui.deleted_posts_screen.DeletedPostsViewModel.States.DeletedPostsState
+import com.example.portfolio.ui.deleted_posts_screen.DeletedPostsViewModel.States.Loading
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed

@@ -1,4 +1,4 @@
-package com.example.portfolio.ui.screens.components
+package com.example.portfolio.ui.components
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.animateColorAsState

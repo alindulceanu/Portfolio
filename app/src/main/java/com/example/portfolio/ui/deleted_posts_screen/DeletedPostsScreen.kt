@@ -1,4 +1,4 @@
-package com.example.portfolio.ui.screens
+package com.example.portfolio.ui.deleted_posts_screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -22,15 +22,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.portfolio.data.local.entities.PostsEntity
-import com.example.portfolio.ui.screens.components.OnLoading
-import com.example.portfolio.ui.screens.components.PostsListItem
+import com.example.portfolio.ui.components.OnLoading
+import com.example.portfolio.ui.components.PostsListItem
 import com.example.portfolio.ui.theme.PortfolioTheme
-import com.example.portfolio.viewmodels.DeletedPostsViewModel.Events
-import com.example.portfolio.viewmodels.DeletedPostsViewModel.Events.CheckPost
-import com.example.portfolio.viewmodels.DeletedPostsViewModel.Events.RestoreAllPosts
-import com.example.portfolio.viewmodels.DeletedPostsViewModel.Events.RestorePosts
-import com.example.portfolio.viewmodels.DeletedPostsViewModel.States
-import com.example.portfolio.viewmodels.DeletedPostsViewModel.States.DeletedPostsState
+import com.example.portfolio.ui.deleted_posts_screen.DeletedPostsViewModel.Events
+import com.example.portfolio.ui.deleted_posts_screen.DeletedPostsViewModel.Events.CheckPost
+import com.example.portfolio.ui.deleted_posts_screen.DeletedPostsViewModel.Events.RestoreAllPosts
+import com.example.portfolio.ui.deleted_posts_screen.DeletedPostsViewModel.Events.RestorePosts
+import com.example.portfolio.ui.deleted_posts_screen.DeletedPostsViewModel.States
+import com.example.portfolio.ui.deleted_posts_screen.DeletedPostsViewModel.States.DeletedPostsState
 
 
 @Composable

@@ -5,7 +5,7 @@ import com.example.portfolio.data.local.entities.PostsEntity
 import com.example.portfolio.data.remote.dto.PostRequest
 import com.example.portfolio.data.remote.dto.PostResponse
 import com.example.portfolio.data.remote.service.PostsServiceImplementation
-import com.example.portfolio.tools.toEntity
+import com.example.portfolio.tools.commons.toEntity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.Flow

@@ -1,4 +1,4 @@
-package com.example.portfolio.viewmodels
+package com.example.portfolio.ui.main_screen
 
 import androidx.compose.material.icons.Icons.Default
 import androidx.compose.material.icons.filled.Favorite
@@ -8,10 +8,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.portfolio.data.MainRepository
 import com.example.portfolio.data.local.entities.PostsEntity
-import com.example.portfolio.viewmodels.MainViewModel.MainScreenTabId.TAB_ONE
-import com.example.portfolio.viewmodels.MainViewModel.MainScreenTabId.TAB_TWO
-import com.example.portfolio.viewmodels.MainViewModel.States.Loading
-import com.example.portfolio.viewmodels.MainViewModel.States.MainState
+import com.example.portfolio.ui.main_screen.MainViewModel.MainScreenTabId.TAB_ONE
+import com.example.portfolio.ui.main_screen.MainViewModel.MainScreenTabId.TAB_TWO
+import com.example.portfolio.ui.main_screen.MainViewModel.States.Loading
+import com.example.portfolio.ui.main_screen.MainViewModel.States.MainState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
